@@ -1,6 +1,6 @@
-env = dev
-default vpc_cidr = 172.31.0.0/16
-vpc_id = vpc-047928c0531911b2b
+env = "dev"
+default vpc_cidr = "172.31.0.0/16"
+vpc_id = "vpc-047928c0531911b2b"
 
 vpc = {
 main = {
