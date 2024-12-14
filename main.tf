@@ -3,6 +3,6 @@ module "vpc" {
   for_each         = var.vpc
   cidr_block       = each.value["cidr_block"]
    subnets            = each.value["subnets"]
-  default_vpc_cidr = each.value["default_vpc_cidr"]
-  default_vpc_id  = each.value["default_vpc_id"]
+  default_vpc_id = var.default_vpc_id
+  default_vpc_cidr  = var.default_vpc_cidr
 }
