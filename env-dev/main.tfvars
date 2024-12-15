@@ -6,12 +6,12 @@ main = {
 cidr_block = "10.0.0.0/16"
   subnets = {
     public = {
-      name = public
-      cidr_block = 10.0.0.0/17
+      name = "public"
+      cidr_block = "10.0.0.0/17"
     }
     private = {
-      name = private
-      cidr_block = 10.0.128.0/17
+      name = "private"
+      cidr_block = "10.0.128.0/17"
     }
   }
 }
