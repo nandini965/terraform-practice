@@ -8,10 +8,12 @@ cidr_block = "10.0.0.0/16"
     public = {
       name = "public"
       cidr_block = "10.0.0.0/17"
+      azs = "ap-south-1a"
     }
     private = {
       name = "private"
       cidr_block = "10.0.128.0/17"
+      azs = "ap-south-1b"
     }
   }
 }
