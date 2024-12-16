@@ -6,6 +6,6 @@ module "vpc" {
   #default_vpc_id = var.default_vpc_id
  # default_vpc_cidr  = var.default_vpc_cidr
   env = var.env
-  azs = each.value["azs"]
+  vpc_id = var.vpc
 
 }
