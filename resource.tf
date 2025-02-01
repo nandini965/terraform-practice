@@ -29,9 +29,7 @@ resource "aws_security_group" "webSg" {
   }
 }
 
-  resource "aws_instance" "myinstance" {
-    ami                     = "08b3552b911ba4752"
-    instance_type  = "t2.small"
-    security_groups     = [aws_security_group.webSg]
-    subnet_id     = var.subnet_id
-  }
+resource "aws_instance" "myinstance" {
+  ami               = "ami-04b4f1a9cf54c11d0"
+  instance_type     = "t2.micro"
+  security_groups   = [aws_security_group.webSg.id]
