@@ -41,17 +41,16 @@ resource "aws_security_group" "webSg" {
 resource "aws_launch_template" "web" {
   count = 2
   name_prefix   = "web"
-  image_id      = "data.aws_ami.ami.id"
+  image_id      = data.aws_ami.ami.id
 instance_type = "t2.micro"
-  subnet_id              = aws_subnet.sub2.id
   vpc_security_group_ids = [aws_security_group.webSg.id]
 }
 
 resource "aws_autoscaling_group" "myag" {
-  availability_zones = ["ap-south-1"]
-  desired_capacity   = 2
-  max_size           = 5
-  min_size           = 2
+  desired_capacity = 2
+  max_size         = 5
+  min_size         = 2
+  vpc_zone_identifier = [aws_subnet.sub1.id, aws_subnet.sub2.id]  # Add subnets
 
   launch_template {
     id      = aws_launch_template.web.id
@@ -71,9 +70,9 @@ resource "aws_lb" "myalb" {
   }
 }
 resource "aws_lb_target_group" "mytg" {
-  name        = mytg
+  name        = "mytg"
   port        = 80
-  protocol    = http
+  protocol    = "HTTP"
   vpc_id      = aws_vpc.myvpc.id
 
   health_check {
@@ -81,10 +80,9 @@ resource "aws_lb_target_group" "mytg" {
     port = "traffic-port"
   }
 }
-resource "aws_lb_target_group_attachment" "tga" {
-  target_group_arn = aws_lb_target_group.mytg.arn
-  target_id = aws_launch_template.web.id
-  port             = 80
+resource "aws_autoscaling_attachment" "asg_attachment" {
+  autoscaling_group_name = aws_autoscaling_group.myag.name
+  alb_target_group_arn   = aws_lb_target_group.mytg.arn
 }
 
 resource "aws_lb_listener" "lb-listener" {
@@ -93,12 +91,8 @@ resource "aws_lb_listener" "lb-listener" {
   protocol          = "HTTP"
 
   default_action {
-    type = "fixed-response"
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.mytg.arn
 
-    fixed_response {
-      content_type = "text/plain"
-      message_body = "unauthorized"
-      status_code  = "403"
-    }
   }
 }
