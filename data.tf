@@ -1,9 +1,6 @@
 data "aws_ami" "ami" {
   most_recent = true
-  owners = ["694121914657"]
-  tags = {
-    Name   = "ami"
-
-  }
+  owners = ["679593333241"]
 }
 
+data "aws_caller_identity" "identity" {}
