@@ -6,4 +6,4 @@ data "aws_ami" "ami" {
 
   }
 }
-data "aws_caller_identity" "identity" {}
+
