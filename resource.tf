@@ -29,10 +29,76 @@ resource "aws_security_group" "webSg" {
   }
 }
 
-resource "aws_instance" "web" {
-  ami                    = data.aws_ami.ami.id
+#resource "aws_instance" "web" {
+#  ami                    = data.aws_ami.ami.id
+#  count                  = 2
+#  instance_type          = "t2.micro"
+#  subnet_id              = aws_subnet.sub2.id
+#  vpc_security_group_ids = [aws_security_group.webSg.id]
+#}
+#create alb
+
+resource "aws_launch_template" "web" {
   count = 2
-  instance_type          = "t2.micro"
+  name_prefix   = "web"
+  image_id      = "data.aws_ami.ami.id"
+instance_type = "t2.micro"
   subnet_id              = aws_subnet.sub2.id
   vpc_security_group_ids = [aws_security_group.webSg.id]
+}
+
+resource "aws_autoscaling_group" "myag" {
+  availability_zones = ["ap-south-1"]
+  desired_capacity   = 2
+  max_size           = 5
+  min_size           = 2
+
+  launch_template {
+    id      = aws_launch_template.web.id
+    version = "$Latest"
+  }
+}
+resource "aws_lb" "myalb" {
+  name               = "myalb"
+  internal           = false
+  load_balancer_type = "application"
+
+  security_groups = [aws_security_group.webSg.id]
+  subnets         = [aws_subnet.sub1.id, aws_subnet.sub2.id]
+
+  tags = {
+    Name = "web"
+  }
+}
+resource "aws_lb_target_group" "mytg" {
+  name        = mytg
+  port        = 80
+  protocol    = http
+  vpc_id      = aws_vpc.myvpc.id
+
+  health_check {
+    path = "/"
+    port = "traffic-port"
+  }
+}
+resource "aws_lb_target_group_attachment" "tga" {
+  target_group_arn = aws_lb_target_group.mytg.arn
+  target_id = aws_launch_template.web.id
+  port             = 80
+}
+
+resource "aws_lb_listener" "lb-listener" {
+  load_balancer_arn = aws_lb.myalb.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "unauthorized"
+      status_code  = "403"
+    }
+  }
 }
