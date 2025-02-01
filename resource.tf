@@ -1,6 +1,6 @@
 resource "aws_security_group" "webSg" {
   name   = "web"
-  vpc_id = var.vpc_id
+  vpc_id = aws_vpc.myvpc.id
 
   ingress {
     description = "HTTP from VPC"
@@ -32,6 +32,6 @@ resource "aws_security_group" "webSg" {
 resource "aws_instance" "webserver" {
   ami                    = "ami-04b4f1a9cf54c11d0"
   instance_type          = "t2.micro"
-  subnet_id              = var.subnet_id
+  subnet_id              = aws_subnet.sub2.id
   vpc_security_group_ids = [aws_security_group.webSg.id]
 }

@@ -1,3 +1,4 @@
-variable "vpc" {}
-variable "subnet_id" {}
-variable "vpc_id" {}
+
+variable "vpc" {
+  cidr_block = "10.0.0.0/16"
+}
