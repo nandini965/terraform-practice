@@ -39,7 +39,6 @@ resource "aws_security_group" "webSg" {
 #create alb
 
 resource "aws_launch_template" "web" {
-  count = aws_launch_template.web[count.index]
   name_prefix   = "web"
   image_id      = data.aws_ami.ami.id
 instance_type = "t2.micro"
