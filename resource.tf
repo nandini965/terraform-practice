@@ -1,6 +1,6 @@
 resource "aws_security_group" "webSg" {
   name   = "web"
-  vpc_id = var.vpc
+  vpc_id = var.vpc_id
 
   ingress {
     description = "HTTP from VPC"
