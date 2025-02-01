@@ -30,7 +30,7 @@ resource "aws_security_group" "webSg" {
 }
 
 resource "aws_instance" "ubuntu" {
-  ami                    = "data.aws_ami.ami.id"
+  ami                    = data.aws_ami.ami.id
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.sub2.id
   vpc_security_group_ids = [aws_security_group.webSg.id]
