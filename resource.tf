@@ -29,7 +29,10 @@ resource "aws_security_group" "webSg" {
   }
 }
 
-resource "aws_instance" "myinstance" {
-  ami               = "ami-04b4f1a9cf54c11d0"
-  instance_type     = "t2.micro"
-  security_groups   = aws_security_group.webSg.id
+resource "aws_instance" "webserver" {
+  ami                    = "ami-04b4f1a9cf54c11d0"
+  instance_type          = "t2.micro"
+  security_groups        = aws_security_group.webSg.id
+  subnet_id              = var.subnet_id
+  vpc_security_group_ids = [aws_security_group.webSg.id]
+}
