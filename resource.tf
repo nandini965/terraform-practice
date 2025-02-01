@@ -79,10 +79,6 @@ resource "aws_lb_target_group" "mytg" {
     port = "traffic-port"
   }
 }
-resource "aws_autoscaling_attachment" "asg_attachment" {
-  autoscaling_group_name = aws_autoscaling_group.myag.name
-  alb_target_group_arn   = aws_lb_target_group.mytg.arn
-}
 
 resource "aws_lb_listener" "lb-listener" {
   load_balancer_arn = aws_lb.myalb.arn
