@@ -40,7 +40,7 @@ resource "aws_security_group" "webSg" {
 
 resource "aws_launch_template" "web" {
   name_prefix   = "web"
-  image_id      = "ami-05fa46471b02db0ce"
+  image_id      = data.aws_ami.ami.id
 instance_type = "t2.micro"
   vpc_security_group_ids = [aws_security_group.webSg.id]
 
