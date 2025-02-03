@@ -24,7 +24,20 @@ resource "aws_subnet" "sub2" {
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.myvpc.id
 }
+resource "aws_eip" "ngw" {
+  tags = {
+    name = "ngw_ip"
+  }
+}
 
+resource "aws_nat_gateway" "NAT" {
+  allocation_id = aws_eip.ngw.id
+  subnet_id     = aws_subnet.sub2.id
+
+  tags = {
+    Name = "gw NAT"
+  }
+}
 resource "aws_route_table" "RT" {
   vpc_id = aws_vpc.myvpc.id
 
