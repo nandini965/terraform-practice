@@ -46,9 +46,9 @@ instance_type = "t2.micro"
 }
 
 resource "aws_autoscaling_group" "myag" {
-  desired_capacity = 1
-  max_size         = 2
-  min_size         = 1
+  desired_capacity = 2
+  max_size         = 5
+  min_size         = 2
   vpc_zone_identifier = [aws_subnet.sub1.id, aws_subnet.sub2.id]  # Add subnets
   launch_template {
     id      = aws_launch_template.web.id
