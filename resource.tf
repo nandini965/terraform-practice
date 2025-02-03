@@ -29,32 +29,31 @@ resource "aws_security_group" "webSg" {
   }
 }
 
-resource "aws_instance" "web" {
-  ami                    = data.aws_ami.ami.id
-  count                  = 2
-  instance_type          = "t2.micro"
-  subnet_id              = aws_subnet.sub2.id
-  vpc_security_group_ids = [aws_security_group.webSg.id]
-}
-
-
-#resource "aws_launch_template" "web" {
-#  name_prefix   = "web"
-#  image_id      = data.aws_ami.ami.id
-#instance_type = "t2.micro"
+#resource "aws_instance" "web" {
+#  ami                    = data.aws_ami.ami.id
+#  count                  = 2
+#  instance_type          = "t2.micro"
+#  subnet_id              = aws_subnet.sub2.id
 #  vpc_security_group_ids = [aws_security_group.webSg.id]
 #}
 
-resource "aws_autoscaling_group" "myag" {
-  desired_capacity = 2
-  max_size         = 5
-  min_size         = 2
-  vpc_zone_identifier = [aws_subnet.sub1.id, aws_subnet.sub2.id]  # Add subnets
 
+resource "aws_launch_template" "web" {
+  name_prefix   = "web"
+  image_id      = data.aws_ami.ami.id
+instance_type = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.webSg.id]
 }
-resource "aws_autoscaling_attachment" "asg_attachment" {
-  autoscaling_group_name = aws_autoscaling_group.myag.name
-  instance_id            = aws_instance.web.id
+
+resource "aws_autoscaling_group" "myag" {
+  desired_capacity = 1
+  max_size         = 2
+  min_size         = 1
+  vpc_zone_identifier = [aws_subnet.sub1.id, aws_subnet.sub2.id]  # Add subnets
+  launch_template {
+    id      = aws_launch_template.web.id
+    version = "$Latest"
+  }
 }
 
 resource "aws_lb" "myalb" {
