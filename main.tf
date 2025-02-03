@@ -7,16 +7,16 @@ resource "aws_vpc" "myvpc" {
   }
 }
 
-resource "aws_subnet" "public" {
+resource "aws_subnet" "sub1" {
   vpc_id                  = aws_vpc.myvpc.id
-  cidr_block              = var.public_subnet_cidr
+  cidr_block              = var.sub1_subnet_cidr
   availability_zone       = var.availability_zones[0]
  //map_public_ip_on_launch = true
 }
 
-resource "aws_subnet" "private" {
+resource "aws_subnet" "sub2" {
   vpc_id                  = aws_vpc.myvpc.id
-  cidr_block              = var.private_subnet_cidr
+  cidr_block              = var.sub2_subnet_cidr
   availability_zone       = var.availability_zones[1]
  // map_public_ip_on_launch = false
 }
@@ -32,7 +32,7 @@ resource "aws_eip" "ngw" {
 
 resource "aws_nat_gateway" "NAT" {
   allocation_id = aws_eip.ngw.id
-  subnet_id     = aws_subnet.public.id
+  subnet_id     = aws_subnet.sub1.id
 
   tags = {
     Name = "gw NAT"
@@ -48,12 +48,12 @@ resource "aws_route_table" "RT" {
 }
 
 resource "aws_route_table_association" "rta1" {
-  subnet_id      = aws_subnet.public.id
+  subnet_id      = aws_subnet.sub1.id
   route_table_id = aws_route_table.RT.id
 }
 
 resource "aws_route_table_association" "rta2" {
-  subnet_id      = aws_subnet.private.id
+  subnet_id      = aws_subnet.sub2.id
   route_table_id = aws_route_table.RT.id
 }
 

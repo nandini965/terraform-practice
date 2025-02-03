@@ -50,7 +50,7 @@ resource "aws_autoscaling_group" "myag" {
   desired_capacity = 2
   max_size         = 5
   min_size         = 2
-  vpc_zone_identifier = [aws_subnet.public.id, aws_subnet.private.id]  # Add subnets
+  vpc_zone_identifier = [aws_subnet.sub1.id, aws_subnet.sub2.id]  # Add subnets
   launch_template {
     id      = aws_launch_template.web.id
     version = "$Latest"
@@ -64,7 +64,7 @@ resource "aws_lb" "myalb" {
   load_balancer_type = "application"
 
   security_groups = [aws_security_group.webSg.id]
-  subnets         = [aws_subnet.public.id, aws_subnet.private.id]
+  subnets         = [aws_subnet.sub1.id, aws_subnet.sub2.id]
 
   tags = {
     Name = "web"
